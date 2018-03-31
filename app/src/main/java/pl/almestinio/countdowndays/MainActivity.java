@@ -1,12 +1,15 @@
 package pl.almestinio.countdowndays;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+
+import com.facebook.stetho.Stetho;
 
 import butterknife.ButterKnife;
+import pl.almestinio.countdowndays.database.DatabaseHelper;
 import pl.almestinio.countdowndays.ui.menuView.MenuFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        Stetho.initializeWithDefaults(this);
+        DatabaseHelper.getInstance(this);
         fragmentManager = getSupportFragmentManager();
 
         changeFragment(new MenuFragment(), MenuFragment.class.getName());

@@ -12,7 +12,10 @@ public interface MenuContracts {
         void showSnackbarSuccess(String message);
         void showSnackbarError(String message);
         void showPopupMenu(Button button, int position);
+        void addItem();
+        void getDaysFromDatabase();
         void setAdapterAndGetRecyclerView();
+        void startNewCountdownFragment();
     }
 
     interface Presenter{
@@ -20,6 +23,7 @@ public interface MenuContracts {
         void onHolderClicked(String title);
         void onMoreOptionsButtonClicked(Button button, int position);
         void onMoreOptionsButtonClicked(String title);
+        void onFabClicked();
     }
 
 }

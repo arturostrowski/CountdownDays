@@ -17,6 +17,7 @@ public class MenuPresenter implements MenuContracts.Presenter {
 
     @Override
     public void loadData() {
+        view.getDaysFromDatabase();
         view.setAdapterAndGetRecyclerView();
     }
 
@@ -33,5 +34,13 @@ public class MenuPresenter implements MenuContracts.Presenter {
     @Override
     public void onMoreOptionsButtonClicked(String title) {
         view.showSnackbarSuccess(title+" more options button clicked :P");
+    }
+
+    @Override
+    public void onFabClicked() {
+        view.showSnackbarSuccess("Fab clicked :3");
+//        view.startNewCountdownFragment();
+        view.addItem();
+//        view.setAdapterAndGetRecyclerView();
     }
 }

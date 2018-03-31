@@ -30,7 +30,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
     @Override
     public TestAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_test, parent, false);
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_countdown, parent, false);
         return new ViewHolder(view);
     }
 

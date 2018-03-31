@@ -39,13 +39,12 @@ public class CountdownDaysAdapter extends RecyclerView.Adapter<CountdownDaysAdap
 
     @Override
     public CountdownDaysAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_test, parent, false);
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_countdown, parent, false);
         return new CountdownDaysAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
         CountdownDay countdownDay = countdownDayList.get(position);
 
         setCountdownDay(holder, countdownDay);
@@ -53,9 +52,18 @@ public class CountdownDaysAdapter extends RecyclerView.Adapter<CountdownDaysAdap
         holder.textViewTitle.setText(countdownDay.getTitle());
         holder.textViewDate.setText(countdownDay.getDate().getDayOfMonth()+"."+countdownDay.getDate().getMonthOfYear()+"."+countdownDay.getDate().getYear());
 
+        switch (countdownDay.getColor()){
+            case "red":
+                holder.textViewCountdownDays.setBackgroundResource(R.drawable.circle_red);
+                break;
+            default:
+                holder.textViewCountdownDays.setBackgroundResource(R.drawable.circle);
+                break;
+        }
+
+
         holder.constraintLayout.setOnClickListener(v -> presenter.onHolderClicked(countdownDay.getTitle()));
         holder.buttonMoreOptions.setOnClickListener(v -> presenter.onMoreOptionsButtonClicked(holder.buttonMoreOptions, position));
-//        holder.buttonMoreOptions.setOnClickListener(v -> presenter.onMoreOptionsButtonClicked(countdownDay.getTitle()));
     }
 
     public void setCountdownDay(ViewHolder holder, CountdownDay countdownDay){
