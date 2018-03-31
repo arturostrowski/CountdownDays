@@ -54,7 +54,8 @@ public class CountdownDaysAdapter extends RecyclerView.Adapter<CountdownDaysAdap
         holder.textViewDate.setText(countdownDay.getDate().getDayOfMonth()+"."+countdownDay.getDate().getMonthOfYear()+"."+countdownDay.getDate().getYear());
 
         holder.constraintLayout.setOnClickListener(v -> presenter.onHolderClicked(countdownDay.getTitle()));
-        holder.buttonMoreOptions.setOnClickListener(v -> presenter.onMoreOptionsButtonClicked(countdownDay.getTitle()));
+        holder.buttonMoreOptions.setOnClickListener(v -> presenter.onMoreOptionsButtonClicked(holder.buttonMoreOptions, position));
+//        holder.buttonMoreOptions.setOnClickListener(v -> presenter.onMoreOptionsButtonClicked(countdownDay.getTitle()));
     }
 
     public void setCountdownDay(ViewHolder holder, CountdownDay countdownDay){

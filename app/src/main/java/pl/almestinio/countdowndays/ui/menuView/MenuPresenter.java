@@ -1,5 +1,7 @@
 package pl.almestinio.countdowndays.ui.menuView;
 
+import android.widget.Button;
+
 /**
  * Created by mesti193 on 3/31/2018.
  */
@@ -19,23 +21,13 @@ public class MenuPresenter implements MenuContracts.Presenter {
     }
 
     @Override
-    public void onButtonClicked() {
-        view.showSnackbarSuccess("Button clicked ;>");
-    }
-
-    @Override
-    public void onHolderClicked() {
-        view.showSnackbarSuccess("Holder clicked :3");
-    }
-
-    @Override
     public void onHolderClicked(String title) {
         view.showSnackbarSuccess(title+" holder clicked :3");
     }
 
     @Override
-    public void onMoreOptionsButtonClicked() {
-        view.showSnackbarSuccess("More options button clicked :P");
+    public void onMoreOptionsButtonClicked(Button button, int position) {
+        view.showPopupMenu(button, position);
     }
 
     @Override

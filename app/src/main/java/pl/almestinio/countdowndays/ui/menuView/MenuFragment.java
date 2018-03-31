@@ -4,10 +4,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.chootdev.csnackbar.Duration;
 import com.chootdev.csnackbar.Snackbar;
@@ -48,8 +51,7 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
 
         presenter = new MenuPresenter(this);
 
-
-
+        
         DateTime dateTime2 = new DateTime(2018, 4, 2, 23, 59);
         DateTime dateTime3 = new DateTime(2018, 4, 5, 23, 59);
         DateTime dateTime4 = new DateTime(2018, 4, 8, 23, 59);
@@ -80,6 +82,29 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
                 .message(message)
                 .duration(Duration.SHORT)
                 .show();
+    }
+
+    @Override
+    public void showPopupMenu(Button button, int position) {
+        PopupMenu popup = new PopupMenu(getContext(), button);
+        popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.share:
+                        return true;
+                    case R.id.edit:
+                        return true;
+                    case R.id.delete:
+                        countdownDayList.remove(position);
+                        showSnackbarError("Removed countdown");
+                        presenter.loadData();
+                        return true;
+                }
+                return true;
+            }
+        });
+        popup.show();
     }
 
     @Override
