@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.almestinio.countdowndays.model.CountdownDay;
+import pl.almestinio.countdowndays.model.UserSettings;
 
 /**
  * Created by mesti193 on 3/31/2018.
@@ -21,8 +22,9 @@ import pl.almestinio.countdowndays.model.CountdownDay;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME = "DatabaseCountdownDays.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private Dao<CountdownDay, Integer> countdownDays = null;
+    private Dao<UserSettings, Integer> userSettings = null;
 
     static DatabaseHelper instance;
 
@@ -40,6 +42,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
             TableUtils.createTable(connectionSource, CountdownDay.class);
+            TableUtils.createTable(connectionSource, UserSettings.class);
 //            TableUtils.dropTable(connectionSource, CountdownDay.class, false);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -51,6 +54,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
             TableUtils.createTableIfNotExists(connectionSource, CountdownDay.class);
+            TableUtils.createTableIfNotExists(connectionSource, UserSettings.class);
 //            TableUtils.dropTable(connectionSource, CountdownDay.class, false);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -71,6 +75,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
         }
         return countdownDays;
+    }
+
+    public Dao<UserSettings, Integer> getUserSettings() {
+        if (userSettings == null) {
+            try {
+                userSettings = getDao(UserSettings.class);
+            } catch (java.sql.SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return userSettings;
     }
 
 }

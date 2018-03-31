@@ -14,12 +14,14 @@ public interface MenuContracts {
         void showPopupMenu(Button button, int position);
         void addItem();
         void getDaysFromDatabase();
+        void sortList();
         void setAdapterAndGetRecyclerView();
         void startNewCountdownFragment();
     }
 
     interface Presenter{
         void loadData();
+        void onSortOptionMenuClicked(int sort);
         void onHolderClicked(String title);
         void onMoreOptionsButtonClicked(Button button, int position);
         void onMoreOptionsButtonClicked(String title);

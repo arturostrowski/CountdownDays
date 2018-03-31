@@ -10,6 +10,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,8 @@ import com.chootdev.csnackbar.Type;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -30,6 +34,7 @@ import butterknife.ButterKnife;
 import pl.almestinio.countdowndays.R;
 import pl.almestinio.countdowndays.adapter.CountdownDaysAdapter;
 import pl.almestinio.countdowndays.database.DatabaseCountdownDay;
+import pl.almestinio.countdowndays.database.DatabaseUserSettings;
 import pl.almestinio.countdowndays.model.CountdownDay;
 import pl.almestinio.countdowndays.ui.newCountdownView.NewCountdownFragment;
 
@@ -80,6 +85,32 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
         presenter.loadData();
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_sort_ascending) {
+
+                presenter.onSortOptionMenuClicked(0);
+
+            return true;
+        }else if(id == R.id.action_sort_descending){
+
+                presenter.onSortOptionMenuClicked(1);
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -137,29 +168,23 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
 
         Random rand = new Random();
         int xd = rand.nextInt((20 - 2) + 1) + 2;
-
         DateTime dateTime4 = new DateTime(2018, 4, xd, 23, 59);
-
         int value = rand.nextInt(2);
 
         if(value==0){
             countdownDayList.add(new CountdownDay("FAB", dateTime4, "red"));
             DatabaseCountdownDay.addOrUpdateDays(new CountdownDay("FAB", dateTime4, "red"));
         }else{
-            countdownDayList.add(new CountdownDay("FAB", dateTime4, "green"));
-            DatabaseCountdownDay.addOrUpdateDays(new CountdownDay("FAB", dateTime4, "green"));
+            countdownDayList.add(new CountdownDay("Hehe", dateTime4, "green"));
+            DatabaseCountdownDay.addOrUpdateDays(new CountdownDay("Hehe", dateTime4, "green"));
         }
-
-        countdownDaysAdapter.notifyItemInserted(countdownDayList.size());
-
+        countdownDaysAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void getDaysFromDatabase() {
         if(countdownDayList != null) countdownDayList.clear();
-
         try{
-
             List<CountdownDay> countdownDays = DatabaseCountdownDay.getDays();
             for(CountdownDay countdownDay : countdownDays){
                 countdownDayList.add(countdownDay);
@@ -170,7 +195,30 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public void sortList() {
+        Collections.sort(countdownDayList, new Comparator<CountdownDay>() {
+            @Override
+            public int compare(CountdownDay e1, CountdownDay e2) {
+                DateTime dt1 = new DateTime(e1.getDate());
+                DateTime dt2 = new DateTime(e2.getDate());
+
+                try{
+                    if(DatabaseUserSettings.getUserSettings().get(0).getSort().equals("ascending")){
+                        //Sort ascending
+                        return dt1.compareTo(dt2);
+                    }else{
+                        //Sort descending
+                        return dt2.compareTo(dt1);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    return dt1.compareTo(dt2);
+                }
+            }
+        });
     }
 
     @Override

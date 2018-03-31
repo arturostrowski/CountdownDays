@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="pl.almestinio.myapplicationvgfsdrssddbbsbssszbdbsdnsdnsdnsnssdnsn.MainActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:title="Settings"/>
+    <item
+        android:id="@+id/action_sort"
+        android:title="Sort">
+        <menu>
+            <item
+                android:id="@+id/action_sort_ascending"
+                android:title="Sort by ascending"/>
+            <item
+                android:id="@+id/action_sort_descending"
+                android:title="Sort by descenting"/>
+        </menu>
+    </item>
+</menu>

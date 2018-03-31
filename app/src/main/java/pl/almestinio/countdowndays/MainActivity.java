@@ -10,6 +10,8 @@ import com.facebook.stetho.Stetho;
 
 import butterknife.ButterKnife;
 import pl.almestinio.countdowndays.database.DatabaseHelper;
+import pl.almestinio.countdowndays.database.DatabaseUserSettings;
+import pl.almestinio.countdowndays.model.UserSettings;
 import pl.almestinio.countdowndays.ui.menuView.MenuFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         Stetho.initializeWithDefaults(this);
         DatabaseHelper.getInstance(this);
         fragmentManager = getSupportFragmentManager();
+
+        DatabaseUserSettings.addOrUpdateDays(new UserSettings("ascending"));
 
         changeFragment(new MenuFragment(), MenuFragment.class.getName());
     }
