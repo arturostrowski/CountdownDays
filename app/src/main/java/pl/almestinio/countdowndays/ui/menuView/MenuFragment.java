@@ -36,6 +36,7 @@ import pl.almestinio.countdowndays.adapter.CountdownDaysAdapter;
 import pl.almestinio.countdowndays.database.DatabaseCountdownDay;
 import pl.almestinio.countdowndays.database.DatabaseUserSettings;
 import pl.almestinio.countdowndays.model.CountdownDay;
+import pl.almestinio.countdowndays.ui.editCountdownView.EditCountdownFragment;
 import pl.almestinio.countdowndays.ui.newCountdownView.NewCountdownFragment;
 
 /**
@@ -130,27 +131,30 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
                     case R.id.share:
                         return true;
                     case R.id.edit:
+                            presenter.onEditClicked(countdownDayList.get(position).getId());
                         return true;
                     case R.id.delete:
-                        try{
-                            DatabaseCountdownDay.deleteDay(countdownDayList.get(position).getId());
-                            countdownDayList.remove(position);
-//                            countdownDaysAdapter.notifyItemRemoved(position);
-//                            countdownDaysAdapter.notifyItemChanged(position, countdownDaysAdapter.getItemCount() - position);
-                            countdownDaysAdapter.notifyDataSetChanged();
-                            showSnackbarError("Removed countdown");
-                        }catch (Exception e){
-                            countdownDaysAdapter.notifyDataSetChanged();
-                            showSnackbarError("Error with removing countdown day... Please try again");
-                            e.printStackTrace();
-                        }
-//                        presenter.loadData();
+                            presenter.onDeleteClicked(position);
                         return true;
                 }
                 return true;
             }
         });
         popup.show();
+    }
+
+    @Override
+    public void removeCountdown(int position) {
+        try{
+            DatabaseCountdownDay.deleteDay(countdownDayList.get(position).getId());
+            countdownDayList.remove(position);
+            countdownDaysAdapter.notifyDataSetChanged();
+            showSnackbarError("Removed countdown");
+        }catch (Exception e){
+            countdownDaysAdapter.notifyDataSetChanged();
+            showSnackbarError("Error with removing countdown day... Please try again");
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -176,7 +180,6 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
             public int compare(CountdownDay e1, CountdownDay e2) {
                 DateTime dt1 = new DateTime(e1.getDate());
                 DateTime dt2 = new DateTime(e2.getDate());
-
                 try{
                     if(DatabaseUserSettings.getUserSettings().get(0).getSort().equals("ascending")){
                         //Sort ascending
@@ -199,6 +202,18 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
         recyclerViewCountdownDays.setAdapter(countdownDaysAdapter);
         recyclerViewCountdownDays.setNestedScrollingEnabled(false);
         recyclerViewCountdownDays.invalidate();
+    }
+
+    @Override
+    public void startEditCountdownFragment(int id) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", id);
+        EditCountdownFragment editCountdownFragment = new EditCountdownFragment();
+        editCountdownFragment.setArguments(bundle);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, editCountdownFragment);
+        fragmentTransaction.addToBackStack(EditCountdownFragment.class.getName());
+        fragmentTransaction.commit();
     }
 
     @Override

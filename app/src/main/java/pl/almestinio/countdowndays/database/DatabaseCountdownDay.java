@@ -3,6 +3,8 @@ package pl.almestinio.countdowndays.database;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 
+import org.joda.time.DateTime;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -24,6 +26,18 @@ public class DatabaseCountdownDay {
         return categoryList;
     }
 
+    public static CountdownDay getDay(int id){
+
+        CountdownDay countdownDay = null;
+        try {
+            countdownDay = DatabaseHelper.instance.getDays().queryForId(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return countdownDay;
+    }
+
     public static void addOrUpdateDays(CountdownDay day) {
         try {
             DatabaseHelper.instance.getDays().createOrUpdate(day);
@@ -31,12 +45,14 @@ public class DatabaseCountdownDay {
             e.printStackTrace();
         }
     }
-    public static void updateDays(String day) {
+    public static void updateDays(int id, String title, DateTime dateTime, String color) {
         try {
 //            DatabaseHelper.instance.getUser().update(user);
             UpdateBuilder<CountdownDay, Integer> updateBuilder = DatabaseHelper.instance.getDays().updateBuilder();
-//            updateBuilder.where().eq("id", 1);
-//            updateBuilder.updateColumnValue("userid", day);
+            updateBuilder.where().eq("id", id);
+            updateBuilder.updateColumnValue("title", title);
+            updateBuilder.updateColumnValue("date", dateTime);
+            updateBuilder.updateColumnValue("color", color);
             updateBuilder.update();
         } catch (SQLException e) {
             e.printStackTrace();

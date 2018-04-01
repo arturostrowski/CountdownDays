@@ -12,18 +12,21 @@ public interface MenuContracts {
         void showSnackbarSuccess(String message);
         void showSnackbarError(String message);
         void showPopupMenu(Button button, int position);
+        void removeCountdown(int position);
         void getDaysFromDatabase();
         void sortList();
         void setAdapterAndGetRecyclerView();
+        void startEditCountdownFragment(int id);
         void startNewCountdownFragment();
     }
 
     interface Presenter{
         void loadData();
         void onSortOptionMenuClicked(int sort);
-        void onHolderClicked(String title);
+        void onHolderClicked(String title, int days);
         void onMoreOptionsButtonClicked(Button button, int position);
-        void onMoreOptionsButtonClicked(String title);
+        void onEditClicked(int position);
+        void onDeleteClicked(int position);
         void onFabClicked();
     }
 

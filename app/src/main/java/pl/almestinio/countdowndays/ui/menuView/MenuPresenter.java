@@ -48,8 +48,14 @@ public class MenuPresenter implements MenuContracts.Presenter {
     }
 
     @Override
-    public void onHolderClicked(String title) {
-        view.showSnackbarSuccess(title+" holder clicked :3");
+    public void onHolderClicked(String title, int days) {
+        if(days == 0){
+            view.showSnackbarSuccess(title+" is today!");
+        }else if(days == 1){
+            view.showSnackbarSuccess(title+" will start tomorrow!");
+        }else{
+            view.showSnackbarSuccess(title+" will start in "+days+" days!");
+        }
     }
 
     @Override
@@ -58,8 +64,13 @@ public class MenuPresenter implements MenuContracts.Presenter {
     }
 
     @Override
-    public void onMoreOptionsButtonClicked(String title) {
-        view.showSnackbarSuccess(title+" more options button clicked :P");
+    public void onEditClicked(int id) {
+        view.startEditCountdownFragment(id);
+    }
+
+    @Override
+    public void onDeleteClicked(int position) {
+        view.removeCountdown(position);
     }
 
     @Override

@@ -60,7 +60,8 @@ public class CountdownDaysAdapter extends RecyclerView.Adapter<CountdownDaysAdap
         drawable.setStroke(10, Color.parseColor(countdownDay.getColor()));
 
 
-        holder.constraintLayout.setOnClickListener(v -> presenter.onHolderClicked(countdownDay.getTitle()));
+
+        holder.constraintLayout.setOnClickListener(v -> presenter.onHolderClicked(countdownDay.getTitle(), Integer.parseInt(holder.textViewCountdownDays.getText().toString())));
         holder.buttonMoreOptions.setOnClickListener(v -> presenter.onMoreOptionsButtonClicked(holder.buttonMoreOptions, position));
     }
 

@@ -23,7 +23,6 @@ public class NewCountdownPresenter implements NewCountdownContracts.Presenter {
 
     @Override
     public void addCountdownToDatabase(CountdownDay countdownDay) {
-
         try{
 
             DatabaseCountdownDay.addOrUpdateDays(new CountdownDay(countdownDay.getTitle(), countdownDay.getDate(), countdownDay.getColor()));
@@ -35,5 +34,4 @@ public class NewCountdownPresenter implements NewCountdownContracts.Presenter {
             e.printStackTrace();
         }
     }
-
 }

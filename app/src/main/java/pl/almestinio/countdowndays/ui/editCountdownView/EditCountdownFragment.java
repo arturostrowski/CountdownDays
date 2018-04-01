@@ -1,4 +1,4 @@
-package pl.almestinio.countdowndays.ui.newCountdownView;
+package pl.almestinio.countdowndays.ui.editCountdownView;
 
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -32,37 +32,38 @@ import org.joda.time.DateTime;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pl.almestinio.countdowndays.MainActivity;
 import pl.almestinio.countdowndays.R;
+import pl.almestinio.countdowndays.database.DatabaseCountdownDay;
 import pl.almestinio.countdowndays.model.CountdownDay;
 import pl.almestinio.countdowndays.ui.menuView.MenuFragment;
 import pl.almestinio.countdowndays.util.DateUtil;
 
-
 /**
- * Created by mesti193 on 3/31/2018.
+ * Created by mesti193 on 4/1/2018.
  */
 
-public class NewCountdownFragment extends Fragment implements NewCountdownContracts.View, DatePickerDialog.OnDateSetListener{
+public class EditCountdownFragment extends Fragment implements EditCountdownContracts.View, DatePickerDialog.OnDateSetListener{
 
     @BindView(R.id.buttonSetDate)
     Button buttonSetDate;
-    @BindView(R.id.editTextDate)
-    EditText editTextDate;
     @BindView(R.id.textViewNewCountdownDays)
     TextView textViewNewCountdownDays;
+    @BindView(R.id.editTextDate)
+    EditText editTextDate;
     @BindView(R.id.editTextTitle)
     EditText editTextTitle;
-
     @BindView(R.id.imageViewColorPicker)
     ImageView imageViewColorPicker;
 
-    private NewCountdownContracts.Presenter presenter;
+    private Bundle bundle;
+
+    private EditCountdownPresenter presenter;
 
     private FragmentManager fragmentManager;
 
+    private CountdownDay countdownDay;
     private DateTime dateTime;
-    private String hexColor = "#DD2C00";
+    private String hexColor;
 
     @Nullable
     @Override
@@ -70,27 +71,36 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
         View view = inflater.inflate(R.layout.fragment_new_countdown, container, false);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Add new countdown");
+        bundle = getArguments();
         fragmentManager = getFragmentManager();
-
-        presenter = new NewCountdownPresenter(this);
+        presenter = new EditCountdownPresenter(this);
 
         editTextDate.setEnabled(false);
 
-        DateTime dateTimeToday = DateUtil.getTodayDay();
-        dateTime = dateTimeToday;
-        buttonSetDate.setOnClickListener(v -> showDate(dateTime.getYear(), dateTime.getMonthOfYear()-1, dateTime.getDayOfMonth(), R.style.DatePickerSpinner));
+        loadCountdownDay();
 
         imageViewColorPicker.setOnClickListener(v -> presenter.getColor(hexColor));
+
+        buttonSetDate.setOnClickListener(v -> showDate(dateTime.getYear(), dateTime.getMonthOfYear()-1, dateTime.getDayOfMonth(), R.style.DatePickerSpinner));
 
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        GradientDrawable drawable2 = (GradientDrawable) textViewNewCountdownDays.getBackground();
-        drawable2.setStroke(10, Color.parseColor("#DD2C00"));
+    public void loadCountdownDay(){
+        countdownDay = DatabaseCountdownDay.getDay(bundle.getInt("id"));
+        hexColor = countdownDay.getColor();
+        dateTime = countdownDay.getDate();
+
+        int days = DateUtil.getDifferenceBetweenTwoDates(DateUtil.getTodayDay(), countdownDay.getDate());
+        textViewNewCountdownDays.setText(String.valueOf(days));
+        GradientDrawable drawable = (GradientDrawable) textViewNewCountdownDays.getBackground();
+        drawable.setStroke(10, Color.parseColor(countdownDay.getColor()));
+        imageViewColorPicker.setBackgroundColor(Color.parseColor(countdownDay.getColor()));
+
+        editTextDate.setText(countdownDay.getDate().getDayOfMonth()+"."+countdownDay.getDate().getMonthOfYear()+"."+countdownDay.getDate().getYear());
+
+        editTextTitle.setText(countdownDay.getTitle());
+
     }
 
     @Override
@@ -104,11 +114,7 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_create_new_countdown:
-                if(editTextDate.getText().length()==0){
-                    showSnackbarerror("Date is required!");
-                }else{
-                    presenter.addCountdownToDatabase(new CountdownDay(editTextTitle.getText().toString(), dateTime, hexColor));
-                }
+                    presenter.editCountdownToDatabase(countdownDay, editTextTitle.getText().toString(), dateTime, hexColor);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -145,7 +151,7 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
     }
 
     @Override
-    public void showSnackbarerror(String message) {
+    public void showSnackbarError(String message) {
         Snackbar.with(getContext(), null)
                 .type(Type.ERROR)
                 .message(message)
@@ -174,7 +180,6 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
                 cp.dismiss();
             }
         });
-
     }
 
     @Override
