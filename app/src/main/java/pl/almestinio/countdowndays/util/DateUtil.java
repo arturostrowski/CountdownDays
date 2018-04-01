@@ -9,6 +9,13 @@ import org.joda.time.Days;
 
 public class DateUtil {
 
+    public static DateTime getTodayDay(){
+
+        DateTime dateTimeToday = new DateTime();
+
+        return dateTimeToday;
+    }
+
     public static int getDifferenceBetweenTwoDates(DateTime startDay, DateTime endDay){
 
         int daysBetween = Days.daysBetween(new DateTime(startDay), new DateTime(endDay)).getDays();

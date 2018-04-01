@@ -65,9 +65,6 @@ public class MenuPresenter implements MenuContracts.Presenter {
     @Override
     public void onFabClicked() {
         view.showSnackbarSuccess("Fab clicked :3");
-//        view.startNewCountdownFragment();
-        view.addItem();
-        view.sortList();
-        view.setAdapterAndGetRecyclerView();
+        view.startNewCountdownFragment();
     }
 }

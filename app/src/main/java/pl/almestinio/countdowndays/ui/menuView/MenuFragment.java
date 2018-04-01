@@ -27,10 +27,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pl.almestinio.countdowndays.MainActivity;
 import pl.almestinio.countdowndays.R;
 import pl.almestinio.countdowndays.adapter.CountdownDaysAdapter;
 import pl.almestinio.countdowndays.database.DatabaseCountdownDay;
@@ -61,6 +61,8 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Countdown Days");
+        fragmentManager = getFragmentManager();
 
         recyclerViewCountdownDays = (RecyclerView) view.findViewById(R.id.recyclerViewCountdownDays);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(),2);
@@ -68,23 +70,15 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
 
         presenter = new MenuPresenter(this);
 
-
-//        DateTime dateTime2 = new DateTime(2018, 4, 1, 23, 59);
-//        DateTime dateTime3 = new DateTime(2018, 4, 5, 23, 59);
-//        DateTime dateTime4 = new DateTime(2018, 4, 8, 23, 59);
-//
-//
-//        countdownDayList.add(new CountdownDay("Android App", dateTime2, "red"));
-//        countdownDayList.add(new CountdownDay("School", dateTime3, "green"));
-//        countdownDayList.add(new CountdownDay("Gym", dateTime4, "red"));
-
-
         floatingActionButton.setOnClickListener(v -> presenter.onFabClicked());
 
-
-        presenter.loadData();
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.loadData();
     }
 
     @Override
@@ -98,16 +92,11 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_sort_ascending) {
-
-                presenter.onSortOptionMenuClicked(0);
-
+            presenter.onSortOptionMenuClicked(0);
             return true;
         }else if(id == R.id.action_sort_descending){
-
-                presenter.onSortOptionMenuClicked(1);
-
+            presenter.onSortOptionMenuClicked(1);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -144,10 +133,11 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
                         return true;
                     case R.id.delete:
                         try{
-                            countdownDaysAdapter.notifyItemRemoved(position);
-                            countdownDaysAdapter.notifyItemChanged(position, countdownDaysAdapter.getItemCount() - position);
                             DatabaseCountdownDay.deleteDay(countdownDayList.get(position).getId());
                             countdownDayList.remove(position);
+//                            countdownDaysAdapter.notifyItemRemoved(position);
+//                            countdownDaysAdapter.notifyItemChanged(position, countdownDaysAdapter.getItemCount() - position);
+                            countdownDaysAdapter.notifyDataSetChanged();
                             showSnackbarError("Removed countdown");
                         }catch (Exception e){
                             countdownDaysAdapter.notifyDataSetChanged();
@@ -161,24 +151,6 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
             }
         });
         popup.show();
-    }
-
-    @Override
-    public void addItem() {
-
-        Random rand = new Random();
-        int xd = rand.nextInt((20 - 2) + 1) + 2;
-        DateTime dateTime4 = new DateTime(2018, 4, xd, 23, 59);
-        int value = rand.nextInt(2);
-
-        if(value==0){
-            countdownDayList.add(new CountdownDay("FAB", dateTime4, "red"));
-            DatabaseCountdownDay.addOrUpdateDays(new CountdownDay("FAB", dateTime4, "red"));
-        }else{
-            countdownDayList.add(new CountdownDay("Hehe", dateTime4, "green"));
-            DatabaseCountdownDay.addOrUpdateDays(new CountdownDay("Hehe", dateTime4, "green"));
-        }
-        countdownDaysAdapter.notifyDataSetChanged();
     }
 
     @Override

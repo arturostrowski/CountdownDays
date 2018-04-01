@@ -1,6 +1,8 @@
 package pl.almestinio.countdowndays.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,14 +54,10 @@ public class CountdownDaysAdapter extends RecyclerView.Adapter<CountdownDaysAdap
         holder.textViewTitle.setText(countdownDay.getTitle());
         holder.textViewDate.setText(countdownDay.getDate().getDayOfMonth()+"."+countdownDay.getDate().getMonthOfYear()+"."+countdownDay.getDate().getYear());
 
-        switch (countdownDay.getColor()){
-            case "red":
-                holder.textViewCountdownDays.setBackgroundResource(R.drawable.circle_red);
-                break;
-            default:
-                holder.textViewCountdownDays.setBackgroundResource(R.drawable.circle);
-                break;
-        }
+
+        holder.textViewCountdownDays.setBackgroundResource(R.drawable.circle);
+        GradientDrawable drawable = (GradientDrawable) holder.textViewCountdownDays.getBackground();
+        drawable.setStroke(10, Color.parseColor(countdownDay.getColor()));
 
 
         holder.constraintLayout.setOnClickListener(v -> presenter.onHolderClicked(countdownDay.getTitle()));
@@ -67,7 +65,6 @@ public class CountdownDaysAdapter extends RecyclerView.Adapter<CountdownDaysAdap
     }
 
     public void setCountdownDay(ViewHolder holder, CountdownDay countdownDay){
-
         DateTime dateTime = new DateTime();
         int days = DateUtil.getDifferenceBetweenTwoDates(dateTime, countdownDay.getDate());
         holder.textViewCountdownDays.setText(String.valueOf(days));

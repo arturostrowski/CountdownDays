@@ -12,7 +12,6 @@ public interface MenuContracts {
         void showSnackbarSuccess(String message);
         void showSnackbarError(String message);
         void showPopupMenu(Button button, int position);
-        void addItem();
         void getDaysFromDatabase();
         void sortList();
         void setAdapterAndGetRecyclerView();
