@@ -17,8 +17,8 @@ public class NewCountdownPresenter implements NewCountdownContracts.Presenter {
 
 
     @Override
-    public void getColor() {
-        view.showColorPicker();
+    public void getColor(String color) {
+        view.showColorPicker(color);
     }
 
     @Override

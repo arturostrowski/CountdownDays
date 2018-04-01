@@ -80,7 +80,7 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
         DateTime dateTimeToday = DateUtil.getTodayDay();
         buttonSetDate.setOnClickListener(v -> showDate(dateTimeToday.getYear(), dateTimeToday.getMonthOfYear()-1, dateTimeToday.getDayOfMonth(), R.style.DatePickerSpinner));
 
-        imageViewColorPicker.setOnClickListener(v -> presenter.getColor());
+        imageViewColorPicker.setOnClickListener(v -> presenter.getColor(hexColor));
 
         return view;
     }
@@ -153,8 +153,13 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
     }
 
     @Override
-    public void showColorPicker() {
-        ColorPicker cp = new ColorPicker(getActivity(), 255, 0, 0);
+    public void showColorPicker(String color) {
+       color = color.substring(1);
+        int rgb = (int)Long.parseLong(color, 16);
+        int r = (rgb >> 16) & 0xFF;
+        int g = (rgb >> 8) & 0xFF;
+        int b = (rgb >> 0) & 0xFF;
+        ColorPicker cp = new ColorPicker(getActivity(), r, g, b);
 
         cp.show();
 
