@@ -5,4 +5,5 @@
     <color name="colorAccent">#B0BEC5</color>
     <color name="colorStrokeCircleRed">#DD2C00</color>
     <color name="colorStrokeCircle">#607D8B</color>
+    <color name="colorWhite">#FFF</color>
 </resources>

@@ -48,6 +48,11 @@ public class MenuPresenter implements MenuContracts.Presenter {
     }
 
     @Override
+    public void onSettingsOptionMenuClicked() {
+        view.startSettingsActivity();
+    }
+
+    @Override
     public void onHolderClicked(String title, int days) {
         if(days == 0){
             view.showSnackbarSuccess(title+" is today!");

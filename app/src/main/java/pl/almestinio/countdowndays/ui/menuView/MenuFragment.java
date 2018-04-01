@@ -1,5 +1,6 @@
 package pl.almestinio.countdowndays.ui.menuView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -38,6 +39,7 @@ import pl.almestinio.countdowndays.database.DatabaseUserSettings;
 import pl.almestinio.countdowndays.model.CountdownDay;
 import pl.almestinio.countdowndays.ui.editCountdownView.EditCountdownFragment;
 import pl.almestinio.countdowndays.ui.newCountdownView.NewCountdownFragment;
+import pl.almestinio.countdowndays.ui.settingsView.SettingsActivity;
 
 /**
  * Created by mesti193 on 3/31/2018.
@@ -91,14 +93,16 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_sort_ascending) {
-            presenter.onSortOptionMenuClicked(0);
-            return true;
-        }else if(id == R.id.action_sort_descending){
-            presenter.onSortOptionMenuClicked(1);
-            return true;
+        switch (item.getItemId()){
+            case R.id.action_settings:
+                    presenter.onSettingsOptionMenuClicked();
+                return true;
+            case R.id.action_sort_ascending:
+                    presenter.onSortOptionMenuClicked(0);
+                return true;
+            case R.id.action_sort_descending:
+                    presenter.onSortOptionMenuClicked(1);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -128,8 +132,6 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
-                    case R.id.share:
-                        return true;
                     case R.id.edit:
                             presenter.onEditClicked(countdownDayList.get(position).getId());
                         return true;
@@ -222,6 +224,11 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
         fragmentTransaction.replace(R.id.fragment_container, new NewCountdownFragment());
         fragmentTransaction.addToBackStack(NewCountdownFragment.class.getName());
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void startSettingsActivity() {
+        startActivity(new Intent(getActivity(), SettingsActivity.class));
     }
 
 }

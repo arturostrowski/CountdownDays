@@ -18,11 +18,13 @@ public interface MenuContracts {
         void setAdapterAndGetRecyclerView();
         void startEditCountdownFragment(int id);
         void startNewCountdownFragment();
+        void startSettingsActivity();
     }
 
     interface Presenter{
         void loadData();
         void onSortOptionMenuClicked(int sort);
+        void onSettingsOptionMenuClicked();
         void onHolderClicked(String title, int days);
         void onMoreOptionsButtonClicked(Button button, int position);
         void onEditClicked(int position);

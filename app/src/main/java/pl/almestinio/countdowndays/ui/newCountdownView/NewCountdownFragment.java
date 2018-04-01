@@ -90,7 +90,7 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
     public void onResume() {
         super.onResume();
         GradientDrawable drawable2 = (GradientDrawable) textViewNewCountdownDays.getBackground();
-        drawable2.setStroke(10, Color.parseColor("#DD2C00"));
+        drawable2.setStroke(14, Color.parseColor("#DD2C00"));
     }
 
     @Override
@@ -170,7 +170,7 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
                 hexColor = String.format( "#%02x%02x%02x", cp.getRed(), cp.getGreen(), cp.getBlue());
                 imageViewColorPicker.setBackgroundColor(Color.parseColor(hexColor));
                 GradientDrawable drawable2 = (GradientDrawable) textViewNewCountdownDays.getBackground();
-                drawable2.setStroke(10, Color.parseColor(hexColor));
+                drawable2.setStroke(14, Color.parseColor(hexColor));
                 cp.dismiss();
             }
         });

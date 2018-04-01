@@ -94,7 +94,7 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
         int days = DateUtil.getDifferenceBetweenTwoDates(DateUtil.getTodayDay(), countdownDay.getDate());
         textViewNewCountdownDays.setText(String.valueOf(days));
         GradientDrawable drawable = (GradientDrawable) textViewNewCountdownDays.getBackground();
-        drawable.setStroke(10, Color.parseColor(countdownDay.getColor()));
+        drawable.setStroke(14, Color.parseColor(countdownDay.getColor()));
         imageViewColorPicker.setBackgroundColor(Color.parseColor(countdownDay.getColor()));
 
         editTextDate.setText(countdownDay.getDate().getDayOfMonth()+"."+countdownDay.getDate().getMonthOfYear()+"."+countdownDay.getDate().getYear());
@@ -176,7 +176,7 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
                 hexColor = String.format( "#%02x%02x%02x", cp.getRed(), cp.getGreen(), cp.getBlue());
                 imageViewColorPicker.setBackgroundColor(Color.parseColor(hexColor));
                 GradientDrawable drawable2 = (GradientDrawable) textViewNewCountdownDays.getBackground();
-                drawable2.setStroke(10, Color.parseColor(hexColor));
+                drawable2.setStroke(14, Color.parseColor(hexColor));
                 cp.dismiss();
             }
         });

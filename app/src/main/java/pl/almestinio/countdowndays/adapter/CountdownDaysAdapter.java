@@ -57,7 +57,7 @@ public class CountdownDaysAdapter extends RecyclerView.Adapter<CountdownDaysAdap
 
         holder.textViewCountdownDays.setBackgroundResource(R.drawable.circle);
         GradientDrawable drawable = (GradientDrawable) holder.textViewCountdownDays.getBackground();
-        drawable.setStroke(10, Color.parseColor(countdownDay.getColor()));
+        drawable.setStroke(14, Color.parseColor(countdownDay.getColor()));
 
 
 
