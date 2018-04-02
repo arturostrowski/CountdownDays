@@ -18,15 +18,15 @@ public class EditCountdownPresenter implements EditCountdownContracts.Presenter 
     }
 
     @Override
-    public void getColor(String color) {
-        view.showColorPicker(color);
+    public void getColor(String color, int id) {
+        view.showColorPicker(color, id);
     }
 
     @Override
-    public void editCountdownToDatabase(CountdownDay countdownDay, String title, DateTime dateTime, String color) {
+    public void editCountdownToDatabase(CountdownDay countdownDay, String title, DateTime dateTime, String colorStroke, String colorSolid) {
         try {
 
-            DatabaseCountdownDay.updateDays(countdownDay.getId(), title, dateTime, color);
+            DatabaseCountdownDay.updateDays(countdownDay.getId(), title, dateTime, colorStroke, colorSolid);
             view.showSnackbarSuccess("Edit successful");
             view.startMenuFragment();
 

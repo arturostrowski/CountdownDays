@@ -30,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
         DatabaseUserSettings.addOrUpdateDays(new UserSettings("ascending"));
 
         changeFragment(new MenuFragment(), MenuFragment.class.getName());
+
+
+//        startService(new Intent(this, ForegroundService.class));
     }
 
 

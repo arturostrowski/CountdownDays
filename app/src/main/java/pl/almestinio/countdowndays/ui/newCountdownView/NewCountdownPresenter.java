@@ -17,15 +17,15 @@ public class NewCountdownPresenter implements NewCountdownContracts.Presenter {
 
 
     @Override
-    public void getColor(String color) {
-        view.showColorPicker(color);
+    public void getColor(String color, int id) {
+        view.showColorPicker(color, id);
     }
 
     @Override
     public void addCountdownToDatabase(CountdownDay countdownDay) {
         try{
 
-            DatabaseCountdownDay.addOrUpdateDays(new CountdownDay(countdownDay.getTitle(), countdownDay.getDate(), countdownDay.getColor()));
+            DatabaseCountdownDay.addOrUpdateDays(new CountdownDay(countdownDay.getTitle(), countdownDay.getDate(), countdownDay.getColorStroke(), countdownDay.getColorSolid()));
             view.showSnackbarSuccess("Added countdown day!");
             view.startMenuFragment();
 

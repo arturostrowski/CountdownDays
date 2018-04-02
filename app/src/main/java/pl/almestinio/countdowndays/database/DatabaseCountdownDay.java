@@ -45,14 +45,15 @@ public class DatabaseCountdownDay {
             e.printStackTrace();
         }
     }
-    public static void updateDays(int id, String title, DateTime dateTime, String color) {
+    public static void updateDays(int id, String title, DateTime dateTime, String colorStroke, String colorSolid) {
         try {
 //            DatabaseHelper.instance.getUser().update(user);
             UpdateBuilder<CountdownDay, Integer> updateBuilder = DatabaseHelper.instance.getDays().updateBuilder();
             updateBuilder.where().eq("id", id);
             updateBuilder.updateColumnValue("title", title);
             updateBuilder.updateColumnValue("date", dateTime);
-            updateBuilder.updateColumnValue("color", color);
+            updateBuilder.updateColumnValue("color_stroke", colorStroke);
+            updateBuilder.updateColumnValue("color_solid", colorSolid);
             updateBuilder.update();
         } catch (SQLException e) {
             e.printStackTrace();

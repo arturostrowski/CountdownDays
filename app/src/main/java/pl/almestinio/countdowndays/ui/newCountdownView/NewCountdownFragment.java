@@ -56,13 +56,16 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
 
     @BindView(R.id.imageViewColorPicker)
     ImageView imageViewColorPicker;
+    @BindView(R.id.imageViewSolidColorPicker)
+    ImageView imageViewSolidColorPicker;
 
     private NewCountdownContracts.Presenter presenter;
 
     private FragmentManager fragmentManager;
 
     private DateTime dateTime;
-    private String hexColor = "#DD2C00";
+    private String hexColorStroke = "#DD2C00";
+    private String hexColorSolid = "#FFFFFF";
 
     @Nullable
     @Override
@@ -70,7 +73,7 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
         View view = inflater.inflate(R.layout.fragment_new_countdown, container, false);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Add new countdown");
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.add_fragment_title);
         fragmentManager = getFragmentManager();
 
         presenter = new NewCountdownPresenter(this);
@@ -81,7 +84,8 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
         dateTime = dateTimeToday;
         buttonSetDate.setOnClickListener(v -> showDate(dateTime.getYear(), dateTime.getMonthOfYear()-1, dateTime.getDayOfMonth(), R.style.DatePickerSpinner));
 
-        imageViewColorPicker.setOnClickListener(v -> presenter.getColor(hexColor));
+        imageViewColorPicker.setOnClickListener(v -> presenter.getColor(hexColorStroke, 0));
+        imageViewSolidColorPicker.setOnClickListener(v -> presenter.getColor(hexColorSolid, 1));
 
         return view;
     }
@@ -89,8 +93,14 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
     @Override
     public void onResume() {
         super.onResume();
-        GradientDrawable drawable2 = (GradientDrawable) textViewNewCountdownDays.getBackground();
-        drawable2.setStroke(14, Color.parseColor("#DD2C00"));
+        GradientDrawable drawable = (GradientDrawable) textViewNewCountdownDays.getBackground();
+        drawable.setStroke(14, Color.parseColor("#DD2C00"));
+        drawable.setColor(Color.parseColor("#FFFFFF"));
+
+        GradientDrawable drawableStroke = (GradientDrawable) imageViewColorPicker.getBackground();
+        drawableStroke.setColor(Color.parseColor("#DD2C00"));
+        GradientDrawable drawableSolid = (GradientDrawable) imageViewSolidColorPicker.getBackground();
+        drawableSolid.setColor(Color.parseColor("#FFFFFF"));
     }
 
     @Override
@@ -107,7 +117,7 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
                 if(editTextDate.getText().length()==0){
                     showSnackbarerror("Date is required!");
                 }else{
-                    presenter.addCountdownToDatabase(new CountdownDay(editTextTitle.getText().toString(), dateTime, hexColor));
+                    presenter.addCountdownToDatabase(new CountdownDay(editTextTitle.getText().toString(), dateTime, hexColorStroke, hexColorSolid));
                 }
                 break;
         }
@@ -154,7 +164,7 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
     }
 
     @Override
-    public void showColorPicker(String color) {
+    public void showColorPicker(String color, int id) {
         color = color.substring(1);
         int rgb = (int)Long.parseLong(color, 16);
         int r = (rgb >> 16) & 0xFF;
@@ -167,11 +177,33 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
         cp.setCallback(new ColorPickerCallback() {
             @Override
             public void onColorChosen(@ColorInt int color) {
-                hexColor = String.format( "#%02x%02x%02x", cp.getRed(), cp.getGreen(), cp.getBlue());
-                imageViewColorPicker.setBackgroundColor(Color.parseColor(hexColor));
-                GradientDrawable drawable2 = (GradientDrawable) textViewNewCountdownDays.getBackground();
-                drawable2.setStroke(14, Color.parseColor(hexColor));
-                cp.dismiss();
+                switch (id){
+                    //STROKE
+                    case 0:
+                        hexColorStroke = String.format( "#%02x%02x%02x", cp.getRed(), cp.getGreen(), cp.getBlue());
+
+                        GradientDrawable drawableStroke = (GradientDrawable) textViewNewCountdownDays.getBackground();
+                        drawableStroke.setStroke(14, Color.parseColor(hexColorStroke));
+
+                        GradientDrawable drawableStroke2 = (GradientDrawable) imageViewColorPicker.getBackground();
+                        drawableStroke2.setColor(Color.parseColor(hexColorStroke));
+
+                        cp.dismiss();
+                        break;
+                    //SOLID
+                    case 1:
+                        hexColorSolid = String.format( "#%02x%02x%02x", cp.getRed(), cp.getGreen(), cp.getBlue());
+
+                        GradientDrawable drawableSolid = (GradientDrawable) textViewNewCountdownDays.getBackground();
+                        drawableSolid.setColor(Color.parseColor(hexColorSolid));
+
+                        GradientDrawable drawableSolid2 = (GradientDrawable) imageViewSolidColorPicker.getBackground();
+                        drawableSolid2.setColor(Color.parseColor(hexColorSolid));
+
+                        cp.dismiss();
+                        break;
+
+                }
             }
         });
 

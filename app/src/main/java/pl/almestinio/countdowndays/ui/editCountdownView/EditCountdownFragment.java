@@ -32,6 +32,7 @@ import org.joda.time.DateTime;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pl.almestinio.countdowndays.MainActivity;
 import pl.almestinio.countdowndays.R;
 import pl.almestinio.countdowndays.database.DatabaseCountdownDay;
 import pl.almestinio.countdowndays.model.CountdownDay;
@@ -54,6 +55,8 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
     EditText editTextTitle;
     @BindView(R.id.imageViewColorPicker)
     ImageView imageViewColorPicker;
+    @BindView(R.id.imageViewSolidColorPicker)
+    ImageView imageViewSolidColorPicker;
 
     private Bundle bundle;
 
@@ -63,7 +66,8 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
 
     private CountdownDay countdownDay;
     private DateTime dateTime;
-    private String hexColor;
+    private String hexColorStroke;
+    private String hexColorSolid;
 
     @Nullable
     @Override
@@ -71,6 +75,7 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
         View view = inflater.inflate(R.layout.fragment_new_countdown, container, false);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.edit_fragment_title);
         bundle = getArguments();
         fragmentManager = getFragmentManager();
         presenter = new EditCountdownPresenter(this);
@@ -79,7 +84,8 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
 
         loadCountdownDay();
 
-        imageViewColorPicker.setOnClickListener(v -> presenter.getColor(hexColor));
+        imageViewColorPicker.setOnClickListener(v -> presenter.getColor(hexColorStroke, 0));
+        imageViewSolidColorPicker.setOnClickListener(v -> presenter.getColor(hexColorSolid, 1));
 
         buttonSetDate.setOnClickListener(v -> showDate(dateTime.getYear(), dateTime.getMonthOfYear()-1, dateTime.getDayOfMonth(), R.style.DatePickerSpinner));
 
@@ -88,14 +94,23 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
 
     public void loadCountdownDay(){
         countdownDay = DatabaseCountdownDay.getDay(bundle.getInt("id"));
-        hexColor = countdownDay.getColor();
+        hexColorStroke = countdownDay.getColorStroke();
+        hexColorSolid = countdownDay.getColorSolid();
         dateTime = countdownDay.getDate();
 
         int days = DateUtil.getDifferenceBetweenTwoDates(DateUtil.getTodayDay(), countdownDay.getDate());
         textViewNewCountdownDays.setText(String.valueOf(days));
         GradientDrawable drawable = (GradientDrawable) textViewNewCountdownDays.getBackground();
-        drawable.setStroke(14, Color.parseColor(countdownDay.getColor()));
-        imageViewColorPicker.setBackgroundColor(Color.parseColor(countdownDay.getColor()));
+        drawable.setStroke(14, Color.parseColor(countdownDay.getColorStroke()));
+        drawable.setColor(Color.parseColor(countdownDay.getColorSolid()));
+
+        GradientDrawable drawableStroke = (GradientDrawable) imageViewColorPicker.getBackground();
+        drawableStroke.setColor(Color.parseColor(countdownDay.getColorStroke()));
+        GradientDrawable drawableSolid = (GradientDrawable) imageViewSolidColorPicker.getBackground();
+        drawableSolid.setColor(Color.parseColor(countdownDay.getColorSolid()));
+
+//        imageViewColorPicker.setBackgroundColor(Color.parseColor(countdownDay.getColorStroke()));
+//        imageViewSolidColorPicker.setBackgroundColor(Color.parseColor(countdownDay.getColorSolid()));
 
         editTextDate.setText(countdownDay.getDate().getDayOfMonth()+"."+countdownDay.getDate().getMonthOfYear()+"."+countdownDay.getDate().getYear());
 
@@ -114,7 +129,7 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_create_new_countdown:
-                    presenter.editCountdownToDatabase(countdownDay, editTextTitle.getText().toString(), dateTime, hexColor);
+                    presenter.editCountdownToDatabase(countdownDay, editTextTitle.getText().toString(), dateTime, hexColorStroke, hexColorSolid);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -160,7 +175,7 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
     }
 
     @Override
-    public void showColorPicker(String color) {
+    public void showColorPicker(String color, int id) {
         color = color.substring(1);
         int rgb = (int)Long.parseLong(color, 16);
         int r = (rgb >> 16) & 0xFF;
@@ -173,11 +188,34 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
         cp.setCallback(new ColorPickerCallback() {
             @Override
             public void onColorChosen(@ColorInt int color) {
-                hexColor = String.format( "#%02x%02x%02x", cp.getRed(), cp.getGreen(), cp.getBlue());
-                imageViewColorPicker.setBackgroundColor(Color.parseColor(hexColor));
-                GradientDrawable drawable2 = (GradientDrawable) textViewNewCountdownDays.getBackground();
-                drawable2.setStroke(14, Color.parseColor(hexColor));
-                cp.dismiss();
+
+                switch (id) {
+                    //STROKE
+                    case 0:
+                        hexColorStroke = String.format("#%02x%02x%02x", cp.getRed(), cp.getGreen(), cp.getBlue());
+
+                        GradientDrawable drawableStroke = (GradientDrawable) textViewNewCountdownDays.getBackground();
+                        drawableStroke.setStroke(14, Color.parseColor(hexColorStroke));
+
+                        GradientDrawable drawableStroke2 = (GradientDrawable) imageViewColorPicker.getBackground();
+                        drawableStroke2.setColor(Color.parseColor(hexColorStroke));
+
+                        cp.dismiss();
+                        break;
+                    //SOLID
+                    case 1:
+                        hexColorSolid = String.format( "#%02x%02x%02x", cp.getRed(), cp.getGreen(), cp.getBlue());
+
+                        GradientDrawable drawableSolid = (GradientDrawable) textViewNewCountdownDays.getBackground();
+                        drawableSolid.setColor(Color.parseColor(hexColorSolid));
+
+                        GradientDrawable drawableSolid2 = (GradientDrawable) imageViewSolidColorPicker.getBackground();
+                        drawableSolid2.setColor(Color.parseColor(hexColorSolid));
+
+                        cp.dismiss();
+                        break;
+
+                }
             }
         });
     }

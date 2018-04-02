@@ -2,6 +2,7 @@ package pl.almestinio.countdowndays.ui.menuView;
 
 import android.widget.Button;
 
+import pl.almestinio.countdowndays.database.DatabaseCountdownDay;
 import pl.almestinio.countdowndays.database.DatabaseUserSettings;
 import pl.almestinio.countdowndays.model.UserSettings;
 
@@ -20,7 +21,7 @@ public class MenuPresenter implements MenuContracts.Presenter {
 
     @Override
     public void loadData() {
-        view.getDaysFromDatabase();
+        view.showDaysFromDatabase(DatabaseCountdownDay.getDays());
         view.sortList();
         view.setAdapterAndGetRecyclerView();
     }
@@ -74,8 +75,16 @@ public class MenuPresenter implements MenuContracts.Presenter {
     }
 
     @Override
-    public void onDeleteClicked(int position) {
-        view.removeCountdown(position);
+    public void onDeleteClicked(int id) {
+        try{
+            DatabaseCountdownDay.deleteDay(id);
+            loadData();
+            view.showSnackbarSuccess("Removed countdown");
+        }catch (Exception e){
+            view.setAdapterAndGetRecyclerView();
+            view.showSnackbarError("Error with removing countdown day... Please try again");
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -83,4 +92,5 @@ public class MenuPresenter implements MenuContracts.Presenter {
         view.showSnackbarSuccess("Fab clicked :3");
         view.startNewCountdownFragment();
     }
+
 }

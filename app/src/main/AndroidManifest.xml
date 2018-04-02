@@ -19,6 +19,8 @@
 
         <activity android:name=".ui.settingsView.SettingsActivity"/>
 
+        <service android:name=".service.ForegroundService" />
+
     </application>
 
 </manifest>

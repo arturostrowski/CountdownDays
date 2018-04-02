@@ -18,7 +18,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
-
+        getSupportActionBar().setTitle(R.string.settings_fragment_title);
 
     }
 }

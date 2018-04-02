@@ -8,13 +8,14 @@ import org.joda.time.DateTime;
 /**
  * Created by mesti193 on 3/31/2018.
  */
-@DatabaseTable(tableName = "CountdownDays")
+@DatabaseTable(tableName = "CountdownDays2")
 public class CountdownDay {
 
     public static final String COL_ID = "id";
     public static final String COL_TITLE = "title";
     public static final String COL_DATE = "date";
-    public static final String COL_COLOR = "color";
+    public static final String COL_COLOR_STROKE = "color_stroke";
+    public static final String COL_COLOR_SOLID = "color_solid";
 
     @DatabaseField(generatedId = true, columnName = COL_ID)
     private int id;
@@ -22,17 +23,21 @@ public class CountdownDay {
     private String title;
     @DatabaseField(columnName = COL_DATE)
     private DateTime date;
-    @DatabaseField(columnName = COL_COLOR)
-    private String color;
+    @DatabaseField(columnName = COL_COLOR_STROKE)
+    private String colorStroke;
+    @DatabaseField(columnName = COL_COLOR_SOLID)
+    private String colorSolid;
+
 
     public CountdownDay(){
 
     }
 
-    public CountdownDay(String title, DateTime date, String color) {
+    public CountdownDay(String title, DateTime date, String colorStroke, String colorSolid) {
         this.title = title;
         this.date = date;
-        this.color = color;
+        this.colorStroke = colorStroke;
+        this.colorSolid = colorSolid;
     }
 
     public int getId() {
@@ -59,11 +64,19 @@ public class CountdownDay {
         this.date = date;
     }
 
-    public String getColor() {
-        return color;
+    public String getColorStroke() {
+        return colorStroke;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setColorStroke(String colorStroke) {
+        this.colorStroke = colorStroke;
+    }
+
+    public String getColorSolid() {
+        return colorSolid;
+    }
+
+    public void setColorSolid(String colorSolid) {
+        this.colorSolid = colorSolid;
     }
 }

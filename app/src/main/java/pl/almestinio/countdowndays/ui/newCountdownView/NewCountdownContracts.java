@@ -11,13 +11,13 @@ public interface NewCountdownContracts {
     interface View{
         void showSnackbarSuccess(String message);
         void showSnackbarerror(String message);
-        void showColorPicker(String color);
+        void showColorPicker(String color, int id);
         void startMenuFragment();
     }
 
     interface Presenter{
 
-        void getColor(String color);
+        void getColor(String color, int id);
         void addCountdownToDatabase(CountdownDay countdownDay);
 
     }

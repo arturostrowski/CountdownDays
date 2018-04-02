@@ -34,7 +34,6 @@ import butterknife.ButterKnife;
 import pl.almestinio.countdowndays.MainActivity;
 import pl.almestinio.countdowndays.R;
 import pl.almestinio.countdowndays.adapter.CountdownDaysAdapter;
-import pl.almestinio.countdowndays.database.DatabaseCountdownDay;
 import pl.almestinio.countdowndays.database.DatabaseUserSettings;
 import pl.almestinio.countdowndays.model.CountdownDay;
 import pl.almestinio.countdowndays.ui.editCountdownView.EditCountdownFragment;
@@ -64,14 +63,15 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Countdown Days");
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.menu_fragment_title);
         fragmentManager = getFragmentManager();
+        presenter = new MenuPresenter(this);
 
         recyclerViewCountdownDays = (RecyclerView) view.findViewById(R.id.recyclerViewCountdownDays);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(),2);
         recyclerViewCountdownDays.setLayoutManager(layoutManager);
 
-        presenter = new MenuPresenter(this);
+
 
         floatingActionButton.setOnClickListener(v -> presenter.onFabClicked());
 
@@ -136,7 +136,7 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
                             presenter.onEditClicked(countdownDayList.get(position).getId());
                         return true;
                     case R.id.delete:
-                            presenter.onDeleteClicked(position);
+                            presenter.onDeleteClicked(countdownDayList.get(position).getId());
                         return true;
                 }
                 return true;
@@ -146,33 +146,8 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
     }
 
     @Override
-    public void removeCountdown(int position) {
-        try{
-            DatabaseCountdownDay.deleteDay(countdownDayList.get(position).getId());
-            countdownDayList.remove(position);
-            countdownDaysAdapter.notifyDataSetChanged();
-            showSnackbarError("Removed countdown");
-        }catch (Exception e){
-            countdownDaysAdapter.notifyDataSetChanged();
-            showSnackbarError("Error with removing countdown day... Please try again");
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void getDaysFromDatabase() {
-        if(countdownDayList != null) countdownDayList.clear();
-        try{
-            List<CountdownDay> countdownDays = DatabaseCountdownDay.getDays();
-            for(CountdownDay countdownDay : countdownDays){
-                countdownDayList.add(countdownDay);
-            }
-            if(countdownDayList.isEmpty()){
-                showSnackbarError("Empty");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    public void showDaysFromDatabase(List<CountdownDay> countdownDayList) {
+        this.countdownDayList = countdownDayList;
     }
 
     @Override
@@ -204,6 +179,7 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
         recyclerViewCountdownDays.setAdapter(countdownDaysAdapter);
         recyclerViewCountdownDays.setNestedScrollingEnabled(false);
         recyclerViewCountdownDays.invalidate();
+        countdownDaysAdapter.notifyDataSetChanged();
     }
 
     @Override

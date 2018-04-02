@@ -3,4 +3,11 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="app_version">1.2.0</string>
+
+
+    <string name="menu_fragment_title">Countdown Days</string>
+    <string name="edit_fragment_title">Edit countdown</string>
+    <string name="add_fragment_title">Add new countdown</string>
+    <string name="settings_fragment_title">Settings</string>
+
 </resources>

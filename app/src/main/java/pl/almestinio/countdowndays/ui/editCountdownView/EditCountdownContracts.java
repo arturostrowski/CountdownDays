@@ -13,13 +13,13 @@ public interface EditCountdownContracts {
     interface View{
         void showSnackbarSuccess(String message);
         void showSnackbarError(String message);
-        void showColorPicker(String color);
+        void showColorPicker(String color, int id);
         void startMenuFragment();
     }
 
     interface Presenter{
-        void getColor(String color);
-        void editCountdownToDatabase(CountdownDay countdownDay, String title, DateTime dateTime, String color);
+        void getColor(String color, int id);
+        void editCountdownToDatabase(CountdownDay countdownDay, String title, DateTime dateTime, String colorStroke, String colorSolid);
     }
 
 }

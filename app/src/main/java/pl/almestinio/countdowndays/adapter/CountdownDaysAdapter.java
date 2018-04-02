@@ -57,8 +57,8 @@ public class CountdownDaysAdapter extends RecyclerView.Adapter<CountdownDaysAdap
 
         holder.textViewCountdownDays.setBackgroundResource(R.drawable.circle);
         GradientDrawable drawable = (GradientDrawable) holder.textViewCountdownDays.getBackground();
-        drawable.setStroke(14, Color.parseColor(countdownDay.getColor()));
-
+        drawable.setStroke(14, Color.parseColor(countdownDay.getColorStroke()));
+        drawable.setColor(Color.parseColor(countdownDay.getColorSolid()));
 
 
         holder.constraintLayout.setOnClickListener(v -> presenter.onHolderClicked(countdownDay.getTitle(), Integer.parseInt(holder.textViewCountdownDays.getText().toString())));
@@ -69,6 +69,7 @@ public class CountdownDaysAdapter extends RecyclerView.Adapter<CountdownDaysAdap
         DateTime dateTime = new DateTime();
         int days = DateUtil.getDifferenceBetweenTwoDates(dateTime, countdownDay.getDate());
         holder.textViewCountdownDays.setText(String.valueOf(days));
+
     }
 
     @Override

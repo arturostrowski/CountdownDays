@@ -111,7 +111,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="0dp"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:gravity="center"
@@ -131,7 +131,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:text="COLOR"
+        android:text="COLORS"
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintLeft_toLeftOf="@+id/viewColor"
         app:layout_constraintTop_toBottomOf="@+id/editTextTitle"
@@ -156,13 +156,20 @@
         android:id="@+id/imageViewColorPicker"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginLeft="0dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/image_view_stroke"
+        app:layout_constraintTop_toBottomOf="@+id/viewColor"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageViewSolidColorPicker"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:background="@color/colorStrokeCircleRed"
-        app:layout_constraintHorizontal_bias="0.512"
-        app:layout_constraintLeft_toLeftOf="@+id/viewColor"
-        app:layout_constraintRight_toRightOf="@+id/viewColor"
+        android:background="@drawable/image_view_stroke"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewColor" />
 
 
