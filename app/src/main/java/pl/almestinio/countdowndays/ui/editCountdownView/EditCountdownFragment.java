@@ -7,7 +7,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +29,7 @@ import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import org.joda.time.DateTime;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.almestinio.countdowndays.MainActivity;
@@ -58,6 +58,11 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
     @BindView(R.id.imageViewSolidColorPicker)
     ImageView imageViewSolidColorPicker;
 
+    @BindString(R.string.edit_fragment_title)
+    String editFragmentTitle;
+    @BindString(R.string.bundle_id)
+    String bundleId;
+
     private Bundle bundle;
 
     private EditCountdownPresenter presenter;
@@ -75,7 +80,7 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
         View view = inflater.inflate(R.layout.fragment_new_countdown, container, false);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.edit_fragment_title);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(editFragmentTitle);
         bundle = getArguments();
         fragmentManager = getFragmentManager();
         presenter = new EditCountdownPresenter(this);
@@ -93,13 +98,12 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
     }
 
     public void loadCountdownDay(){
-        countdownDay = DatabaseCountdownDay.getDay(bundle.getInt("id"));
+        countdownDay = DatabaseCountdownDay.getDay(bundle.getInt(bundleId));
         hexColorStroke = countdownDay.getColorStroke();
         hexColorSolid = countdownDay.getColorSolid();
         dateTime = countdownDay.getDate();
 
-        int days = DateUtil.getDifferenceBetweenTwoDates(DateUtil.getTodayDay(), countdownDay.getDate());
-        textViewNewCountdownDays.setText(String.valueOf(days));
+        textViewNewCountdownDays.setText(String.valueOf(DateUtil.getDifferenceBetweenTwoDates(DateUtil.getTodayDay(), countdownDay.getDate())));
         GradientDrawable drawable = (GradientDrawable) textViewNewCountdownDays.getBackground();
         drawable.setStroke(14, Color.parseColor(countdownDay.getColorStroke()));
         drawable.setColor(Color.parseColor(countdownDay.getColorSolid()));
@@ -109,11 +113,8 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
         GradientDrawable drawableSolid = (GradientDrawable) imageViewSolidColorPicker.getBackground();
         drawableSolid.setColor(Color.parseColor(countdownDay.getColorSolid()));
 
-//        imageViewColorPicker.setBackgroundColor(Color.parseColor(countdownDay.getColorStroke()));
-//        imageViewSolidColorPicker.setBackgroundColor(Color.parseColor(countdownDay.getColorSolid()));
 
         editTextDate.setText(countdownDay.getDate().getDayOfMonth()+"."+countdownDay.getDate().getMonthOfYear()+"."+countdownDay.getDate().getYear());
-
         editTextTitle.setText(countdownDay.getTitle());
 
     }
@@ -147,31 +148,17 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
 
 
     void showDate(int year, int monthOfYear, int dayOfMonth, int spinnerTheme) {
-        new SpinnerDatePickerDialogBuilder()
-                .context(getContext())
-                .callback(this)
-                .spinnerTheme(spinnerTheme)
-                .defaultDate(year, monthOfYear, dayOfMonth)
-                .build()
-                .show();
+        new SpinnerDatePickerDialogBuilder().context(getContext()).callback(this).spinnerTheme(spinnerTheme).defaultDate(year, monthOfYear, dayOfMonth).build().show();
     }
 
     @Override
     public void showSnackbarSuccess(String message) {
-        Snackbar.with(getContext(), null)
-                .type(Type.SUCCESS)
-                .message(message)
-                .duration(Duration.SHORT)
-                .show();
+        Snackbar.with(getContext(), null).type(Type.SUCCESS).message(message).duration(Duration.SHORT).show();
     }
 
     @Override
     public void showSnackbarError(String message) {
-        Snackbar.with(getContext(), null)
-                .type(Type.ERROR)
-                .message(message)
-                .duration(Duration.SHORT)
-                .show();
+        Snackbar.with(getContext(), null).type(Type.ERROR).message(message).duration(Duration.SHORT).show();
     }
 
     @Override
@@ -222,9 +209,6 @@ public class EditCountdownFragment extends Fragment implements EditCountdownCont
 
     @Override
     public void startMenuFragment() {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, new MenuFragment());
-        fragmentTransaction.addToBackStack(MenuFragment.class.getName());
-        fragmentTransaction.commit();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, new MenuFragment()).addToBackStack(MenuFragment.class.getName()).commit();
     }
 }

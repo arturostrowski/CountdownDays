@@ -2,12 +2,17 @@
     <string name="app_name">CountdownDays</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
-    <string name="app_version">1.2.0</string>
+    <string name="app_version">1.2.2</string>
 
 
     <string name="menu_fragment_title">Countdown Days</string>
     <string name="edit_fragment_title">Edit countdown</string>
     <string name="add_fragment_title">Add new countdown</string>
     <string name="settings_fragment_title">Settings</string>
+
+    <string name="database_user_settings_sort_ascending">ascending</string>
+    <string name="database_user_settings_sort_descending">descending</string>
+
+    <string name="bundle_id">id</string>
 
 </resources>

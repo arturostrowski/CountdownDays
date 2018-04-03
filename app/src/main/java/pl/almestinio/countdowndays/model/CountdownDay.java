@@ -11,11 +11,11 @@ import org.joda.time.DateTime;
 @DatabaseTable(tableName = "CountdownDays2")
 public class CountdownDay {
 
-    public static final String COL_ID = "id";
-    public static final String COL_TITLE = "title";
-    public static final String COL_DATE = "date";
-    public static final String COL_COLOR_STROKE = "color_stroke";
-    public static final String COL_COLOR_SOLID = "color_solid";
+    private static final String COL_ID = "id";
+    private static final String COL_TITLE = "title";
+    private static final String COL_DATE = "date";
+    private static final String COL_COLOR_STROKE = "color_stroke";
+    private static final String COL_COLOR_SOLID = "color_solid";
 
     @DatabaseField(generatedId = true, columnName = COL_ID)
     private int id;

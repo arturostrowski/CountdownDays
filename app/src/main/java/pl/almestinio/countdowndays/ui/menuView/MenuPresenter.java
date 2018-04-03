@@ -12,6 +12,8 @@ import pl.almestinio.countdowndays.model.UserSettings;
 
 public class MenuPresenter implements MenuContracts.Presenter {
 
+    private final String USER_SETTINGS_SORT_BY_ASCENDING = "ascending";
+    private final String USER_SETTINGS_SORT_BY_DESCENDING = "descending";
     private MenuContracts.View view;
 
     public MenuPresenter(MenuContracts.View view){
@@ -38,10 +40,10 @@ public class MenuPresenter implements MenuContracts.Presenter {
 
         switch (sort){
             case 0:
-                DatabaseUserSettings.addOrUpdateDays(new UserSettings("ascending"));
+                DatabaseUserSettings.addOrUpdateDays(new UserSettings(USER_SETTINGS_SORT_BY_ASCENDING));
                 break;
             case 1:
-                DatabaseUserSettings.addOrUpdateDays(new UserSettings("descending"));
+                DatabaseUserSettings.addOrUpdateDays(new UserSettings(USER_SETTINGS_SORT_BY_DESCENDING));
                 break;
         }
 

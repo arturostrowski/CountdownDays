@@ -7,7 +7,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +29,7 @@ import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import org.joda.time.DateTime;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.almestinio.countdowndays.MainActivity;
@@ -53,11 +53,13 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
     TextView textViewNewCountdownDays;
     @BindView(R.id.editTextTitle)
     EditText editTextTitle;
-
     @BindView(R.id.imageViewColorPicker)
     ImageView imageViewColorPicker;
     @BindView(R.id.imageViewSolidColorPicker)
     ImageView imageViewSolidColorPicker;
+
+    @BindString(R.string.add_fragment_title)
+    String addFragmentTitle;
 
     private NewCountdownContracts.Presenter presenter;
 
@@ -73,15 +75,12 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
         View view = inflater.inflate(R.layout.fragment_new_countdown, container, false);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.add_fragment_title);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(addFragmentTitle);
         fragmentManager = getFragmentManager();
-
         presenter = new NewCountdownPresenter(this);
-
         editTextDate.setEnabled(false);
 
-        DateTime dateTimeToday = DateUtil.getTodayDay();
-        dateTime = dateTimeToday;
+        dateTime = DateUtil.getTodayDay();
         buttonSetDate.setOnClickListener(v -> showDate(dateTime.getYear(), dateTime.getMonthOfYear()-1, dateTime.getDayOfMonth(), R.style.DatePickerSpinner));
 
         imageViewColorPicker.setOnClickListener(v -> presenter.getColor(hexColorStroke, 0));
@@ -136,31 +135,7 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
 
 
     void showDate(int year, int monthOfYear, int dayOfMonth, int spinnerTheme) {
-        new SpinnerDatePickerDialogBuilder()
-                .context(getContext())
-                .callback(this)
-                .spinnerTheme(spinnerTheme)
-                .defaultDate(year, monthOfYear, dayOfMonth)
-                .build()
-                .show();
-    }
-
-    @Override
-    public void showSnackbarSuccess(String message) {
-        Snackbar.with(getContext(), null)
-                .type(Type.SUCCESS)
-                .message(message)
-                .duration(Duration.SHORT)
-                .show();
-    }
-
-    @Override
-    public void showSnackbarerror(String message) {
-        Snackbar.with(getContext(), null)
-                .type(Type.ERROR)
-                .message(message)
-                .duration(Duration.SHORT)
-                .show();
+        new SpinnerDatePickerDialogBuilder().context(getContext()).callback(this).spinnerTheme(spinnerTheme).defaultDate(year, monthOfYear, dayOfMonth).build().show();
     }
 
     @Override
@@ -202,18 +177,23 @@ public class NewCountdownFragment extends Fragment implements NewCountdownContra
 
                         cp.dismiss();
                         break;
-
                 }
             }
         });
+    }
 
+    @Override
+    public void showSnackbarSuccess(String message) {
+        Snackbar.with(getContext(), null).type(Type.SUCCESS).message(message).duration(Duration.SHORT).show();
+    }
+
+    @Override
+    public void showSnackbarerror(String message) {
+        Snackbar.with(getContext(), null).type(Type.ERROR).message(message).duration(Duration.SHORT).show();
     }
 
     @Override
     public void startMenuFragment() {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, new MenuFragment());
-        fragmentTransaction.addToBackStack(MenuFragment.class.getName());
-        fragmentTransaction.commit();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, new MenuFragment()).addToBackStack(MenuFragment.class.getName()).commit();
     }
 }

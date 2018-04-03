@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +28,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.almestinio.countdowndays.MainActivity;
@@ -49,6 +49,13 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
     @BindView(R.id.fab)
     FloatingActionButton floatingActionButton;
 
+    @BindString(R.string.menu_fragment_title)
+    String menuFragmentTitle;
+    @BindString(R.string.database_user_settings_sort_ascending)
+    String userSettingsSortByAscending;
+    @BindString(R.string.bundle_id)
+    String bundleId;
+
     private CountdownDaysAdapter countdownDaysAdapter;
     private RecyclerView recyclerViewCountdownDays;
     private List<CountdownDay> countdownDayList = new ArrayList<CountdownDay>();
@@ -63,15 +70,13 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.menu_fragment_title);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(menuFragmentTitle);
         fragmentManager = getFragmentManager();
         presenter = new MenuPresenter(this);
 
         recyclerViewCountdownDays = (RecyclerView) view.findViewById(R.id.recyclerViewCountdownDays);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(),2);
         recyclerViewCountdownDays.setLayoutManager(layoutManager);
-
-
 
         floatingActionButton.setOnClickListener(v -> presenter.onFabClicked());
 
@@ -109,20 +114,12 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
 
     @Override
     public void showSnackbarSuccess(String message) {
-        Snackbar.with(getContext(), null)
-                .type(Type.SUCCESS)
-                .message(message)
-                .duration(Duration.SHORT)
-                .show();
+        Snackbar.with(getContext(), null).type(Type.SUCCESS).message(message).duration(Duration.SHORT).show();
     }
 
     @Override
     public void showSnackbarError(String message) {
-        Snackbar.with(getContext(), null)
-                .type(Type.ERROR)
-                .message(message)
-                .duration(Duration.SHORT)
-                .show();
+        Snackbar.with(getContext(), null).type(Type.ERROR).message(message).duration(Duration.SHORT).show();
     }
 
     @Override
@@ -158,7 +155,7 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
                 DateTime dt1 = new DateTime(e1.getDate());
                 DateTime dt2 = new DateTime(e2.getDate());
                 try{
-                    if(DatabaseUserSettings.getUserSettings().get(0).getSort().equals("ascending")){
+                    if(DatabaseUserSettings.getUserSettings().get(0).getSort().equals(userSettingsSortByAscending)){
                         //Sort ascending
                         return dt1.compareTo(dt2);
                     }else{
@@ -185,21 +182,15 @@ public class MenuFragment extends Fragment implements MenuContracts.View {
     @Override
     public void startEditCountdownFragment(int id) {
         Bundle bundle = new Bundle();
-        bundle.putInt("id", id);
+        bundle.putInt(bundleId, id);
         EditCountdownFragment editCountdownFragment = new EditCountdownFragment();
         editCountdownFragment.setArguments(bundle);
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, editCountdownFragment);
-        fragmentTransaction.addToBackStack(EditCountdownFragment.class.getName());
-        fragmentTransaction.commit();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, editCountdownFragment).addToBackStack(EditCountdownFragment.class.getName()).commit();
     }
 
     @Override
     public void startNewCountdownFragment() {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, new NewCountdownFragment());
-        fragmentTransaction.addToBackStack(NewCountdownFragment.class.getName());
-        fragmentTransaction.commit();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, new NewCountdownFragment()).addToBackStack(NewCountdownFragment.class.getName()).commit();
     }
 
     @Override

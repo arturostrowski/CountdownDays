@@ -10,8 +10,8 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "UserSettings")
 public class UserSettings {
 
-    public static final String COL_ID = "id";
-    public static final String COL_SORT = "sort";
+    private static final String COL_ID = "id";
+    private static final String COL_SORT = "sort";
 
     @DatabaseField(generatedId = true, columnName = COL_ID)
     private int id;
